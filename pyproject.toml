@@ -1,0 +1,10 @@
+[project]
+name = 'projeto-ficha'
+
+version = '0.1.0'
+
+description = 
+
+authors = [
+{name = 'Eric', email = 'ericjc16oficial@gmail.com'}
+]
