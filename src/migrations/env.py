@@ -8,7 +8,6 @@ from core.configuracoes import DATABASE_URL, Base
 from models.usuario_model import Usuario
 from models.ficha_model import Ficha
 
-
 DATABASE_URL_SYNC = DATABASE_URL.replace(
     'sqlite+aiosqlite',
     'sqlite'
