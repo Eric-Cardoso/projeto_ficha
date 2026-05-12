@@ -1,0 +1,14 @@
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+
+class CriarUsuario(BaseModel):
+    nome: Optional[str] = Field(default=None, min_length=3)
+    email: EmailStr
+    senha: str
+
+class UsuarioPublic(BaseModel):
+    id: int
+    nome: Optional[str] = None
+    email: str
+    senha: str
+    quantidade_fichas: int
