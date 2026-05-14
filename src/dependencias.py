@@ -4,7 +4,7 @@ from core.configuracoes import SessionLocal
 async def sessao():
     async with SessionLocal() as sessao: 
         yield sessao
-
+  
 
 
     

@@ -1,11 +1,12 @@
 from fastapi import FastAPI, status
-from routers import usuario_rota
+from routers import usuario_rotas, auth_rotas
 
 # Configura o app
 app = FastAPI(title='projeto-ficha', version='0.1.0')
 
 # Inclui as rotas no app
-app.include_router(usuario_rota.usuario_rota)
+app.include_router(usuario_rotas.usuario_rota)
+app.include_router(auth_rotas.auth_rota)
 
 @app.get(path='/', status_code=status.HTTP_200_OK)
 async def home():
