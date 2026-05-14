@@ -46,7 +46,13 @@ async def login_usuario(
         'token_type': 'bearer'
     }
 
-    
-    
+async def refresh(usuario: Usuario) -> dict:
+    # Cria o token de acesso
+    access_token = gerar_token(id_usuario=usuario.id)
+
+    return {
+        'access_token': access_token,
+        'token_type': 'bearer'
+    }
 
     
