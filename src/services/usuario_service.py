@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from schemas import usuario_schema
@@ -82,3 +82,11 @@ async def atualizar_usuario(
     await repo_usuario.atualizar_usuario(usuario=db_usuario, sessao=sessao)
 
     return db_usuario
+
+async def deletar_usuario(usuario: Usuario, sessao: AsyncSession) -> Response:
+    # Deleta o usuário
+    await repo_usuario.deletar_usuario(usuario=usuario, sessao=sessao)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
