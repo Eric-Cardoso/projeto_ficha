@@ -31,3 +31,21 @@ async def listar_usuario(
 ):
     
     return await usuario_service.listar_usuario(usuario=usuario)
+
+@usuario_rota.patch(
+    path='/me', 
+    response_model=usuario_schema.UsuarioPublico, 
+    status_code=status.HTTP_200_OK
+)
+async def atualizar_usuario(
+    dados: usuario_schema.AtualizarUsuario, 
+    usuario: usuario_model.Usuario = Depends(verificar_token),
+    sessao: AsyncSession = Depends(sessao),
+    
+) -> usuario_model.Usuario:
+    
+    return await usuario_service.atualizar_usuario(
+        usuario=usuario, 
+        sessao=sessao, 
+        dados=dados
+    )

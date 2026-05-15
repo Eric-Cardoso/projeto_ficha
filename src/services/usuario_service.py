@@ -52,3 +52,33 @@ async def criar_usuario(
 async def listar_usuario(usuario: Usuario):
     return usuario
 
+async def atualizar_usuario(
+    usuario: Usuario, 
+    sessao: AsyncSession, 
+    dados: usuario_schema.AtualizarUsuario
+) -> Usuario:
+    
+    # Tenta obter o usuário de acordo com o id
+    db_usuario = await sessao.scalar(
+        select(Usuario)
+        .where(Usuario.id == usuario.id)
+    )
+
+    # Verifica se o usuário foi encontrado
+    if not db_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Usuário não encontrado'
+        )
+    
+    # Obtém em dict os dados enviados
+    dict_dados = dados.model_dump()
+
+    # Atualiza os dados do usuário
+    for campo, valor in dict_dados.items():
+        setattr(db_usuario, campo, valor)
+
+    # Salva as alterações no banco
+    await repo_usuario.atualizar_usuario(usuario=db_usuario, sessao=sessao)
+
+    return db_usuario

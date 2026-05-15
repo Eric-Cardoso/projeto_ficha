@@ -12,3 +12,6 @@ class UsuarioPublico(BaseModel):
     email: str
     senha: str
     quantidade_fichas: int
+
+class AtualizarUsuario(BaseModel):
+    nome: Optional[str] = Field(default=None, min_length=3)
