@@ -6,7 +6,7 @@ class CriarUsuario(BaseModel):
     email: EmailStr
     senha: str
 
-class UsuarioPublic(BaseModel):
+class UsuarioPublico(BaseModel):
     id: int
     nome: Optional[str] = None
     email: str

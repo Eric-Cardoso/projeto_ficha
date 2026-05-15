@@ -49,3 +49,6 @@ async def criar_usuario(
 
     return db_usuario
 
+async def listar_usuario(usuario: Usuario):
+    return usuario
+
