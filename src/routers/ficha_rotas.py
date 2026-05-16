@@ -25,3 +25,18 @@ async def criar_ficha(
         usuario=usuario, 
         sessao=sessao
     )
+
+@ficha_rota.get(
+    path='/me', 
+    response_model=ficha_schema.ListarFichas, 
+    status_code=status.HTTP_200_OK
+)
+async def listar_fichas(
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> ficha_schema.ListarFichas:
+    
+    return await ficha_service.listar_fichas(
+        usuario=usuario, 
+        sessao=sessao
+    )

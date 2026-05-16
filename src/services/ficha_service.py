@@ -2,6 +2,7 @@ from models.usuario_model import Usuario
 from models.ficha_model import Ficha
 from fastapi import Depends, HTTPException, status
 from dependencias import verificar_token, sessao
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from schemas import ficha_schema
 from repos import repo_ficha
@@ -36,3 +37,17 @@ async def criar_ficha(
 
     return db_ficha
 
+async def listar_fichas(
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> ficha_schema.ListarFichas:
+    
+    # Obtém todas as fichas que pertencem ao usuário logado
+    db_fichas = await sessao.scalars(
+        select(Ficha)
+        .where(Ficha.id_usuario == usuario.id)
+    )
+
+    return {
+        'fichas': db_fichas.all()
+    }

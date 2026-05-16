@@ -34,3 +34,6 @@ class FichaPublica(BaseModel):
     descricao: Optional[str] = None
     defesa: int
     armas: Optional[str] = None
+
+class ListarFichas(BaseModel):
+    fichas: list[FichaPublica]
