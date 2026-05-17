@@ -37,3 +37,19 @@ class FichaPublica(BaseModel):
 
 class ListarFichas(BaseModel):
     fichas: list[FichaPublica]
+
+class AtualizarFicha(BaseModel):
+    nome_personagem: str
+    nome_jogador: str
+    vida: int = Field(default=20)
+    sanidade: int = Field(default=10)
+    classe: str
+    forca: int = Field(default=1)
+    agilidade: int = Field(default=1)
+    intelecto: int = Field(default=1)
+    presenca: int = Field(default=1)
+    vigor: int = Field(default=1)
+    inventario: str
+    descricao: str
+    defesa: int = Field(default=1)
+    armas: str
