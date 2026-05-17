@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from dotenv import load_dotenv
 import os
+import redis.asyncio as redis
 
 # Carrega as variáveis de ambiente
 load_dotenv()
@@ -34,3 +35,6 @@ SessionLocal = async_sessionmaker(
 
 # Cria o Base
 Base = declarative_base()
+
+# Configura o Redis
+cache = redis.Redis()
