@@ -17,3 +17,10 @@ async def atualizar_ficha(ficha: Ficha, sessao: AsyncSession) -> None:
 
     # Atualiza o objeto
     await sessao.refresh(ficha)
+
+async def deletar_ficha(ficha: Ficha, sessao: AsyncSession) -> None:
+    # Deleta a ficha do banco
+    await sessao.delete(ficha)
+    
+    # Salva no banco as alterações
+    await sessao.commit()

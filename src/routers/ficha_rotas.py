@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, Response
 from schemas import ficha_schema
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependencias import sessao
@@ -92,6 +92,22 @@ async def atualizar_parcial_ficha(
     return await ficha_service.atualizar_parcial_ficha(
         id_ficha=id_ficha,
         dados=dados,
+        usuario=usuario, 
+        sessao=sessao
+    )
+
+@ficha_rota.delete(
+    path='/me/{id_ficha}', 
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def deletar_ficha(
+    id_ficha: int,
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> Response:
+    
+    return await ficha_service.deletar_ficha(
+        id_ficha=id_ficha,
         usuario=usuario, 
         sessao=sessao
     )

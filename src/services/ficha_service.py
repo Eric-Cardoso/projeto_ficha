@@ -1,6 +1,6 @@
 from models.usuario_model import Usuario
 from models.ficha_model import Ficha
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Response
 from dependencias import verificar_token, sessao
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -189,3 +189,38 @@ async def atualizar_parcial_ficha(
     await redis_service.deletar_ficha(id_ficha=db_ficha.id)
 
     return db_ficha
+
+async def deletar_ficha(
+    id_ficha: int,
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> Response:
+    
+    # Tenta obter a ficha de acordo com o id
+    db_ficha = await sessao.scalar(select(Ficha).where(Ficha.id == id_ficha))
+
+    # Verifica se a ficha foi encontrada
+    if not db_ficha:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Ficha não encontrada'
+        )
+    
+    # Verifica se a ficha pertence ao usuário logado
+    if usuario.id != db_ficha.id_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail='Acesso negado'
+        )
+    
+    # Atualiza a quantidade de fichas que o usuário possuí
+    if usuario.quantidade_fichas > 0:
+        usuario.quantidade_fichas -= 1
+    
+    # Deleta a ficha e salva
+    await repo_ficha.deletar_ficha(ficha=db_ficha, sessao=sessao)
+
+    # Deleta a ficha do cache
+    await redis_service.deletar_ficha(id_ficha=db_ficha.id)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
