@@ -147,7 +147,45 @@ async def atualizar_ficha(
     await repo_ficha.atualizar_ficha(ficha=db_ficha, sessao=sessao)
 
     # Deleta a ficha do cache
-    redis_service.deletar_ficha(id_ficha=db_ficha.id)
+    await redis_service.deletar_ficha(id_ficha=db_ficha.id)
 
     return db_ficha
 
+async def atualizar_parcial_ficha(
+    id_ficha: int,
+    dados: ficha_schema.AtualizarParcialFicha, 
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> Ficha:
+    
+    # Tenta obter a ficha de acordo com o id
+    db_ficha = await sessao.scalar(select(Ficha).where(Ficha.id == id_ficha))
+
+    # Verifica se a ficha foi encontrada
+    if not db_ficha:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Ficha não encontrada'
+        )
+    
+    # Verifica se a ficha pertence ao usuário logado
+    if usuario.id != db_ficha.id_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail='Acesso negado'
+        )
+    
+    # Obtém os dados enviados em forma de dict
+    dict_dados = dados.model_dump(exclude_unset=True, exclude_none=True)
+
+    # Atualiza os dados da ficha
+    for campo, valor in dict_dados.items():
+        setattr(db_ficha, campo, valor)
+
+    # Salva no banco
+    await repo_ficha.atualizar_ficha(ficha=db_ficha, sessao=sessao)
+
+    # Deleta a ficha do cache
+    await redis_service.deletar_ficha(id_ficha=db_ficha.id)
+
+    return db_ficha

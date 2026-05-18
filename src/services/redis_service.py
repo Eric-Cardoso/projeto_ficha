@@ -22,4 +22,3 @@ async def deletar_ficha(id_ficha: int) -> None:
     # Deleta a ficha do cache
     await cache.delete(f'{id_ficha}')
     
-

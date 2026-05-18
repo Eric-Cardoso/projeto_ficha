@@ -53,3 +53,19 @@ class AtualizarFicha(BaseModel):
     descricao: str
     defesa: int = Field(default=1)
     armas: str
+
+class AtualizarParcialFicha(BaseModel):
+    nome_personagem: Optional[str] = None
+    nome_jogador: Optional[str] = None
+    vida: Optional[int] = Field(default=20)
+    sanidade: Optional[int] = Field(default=10)
+    classe: Optional[str] = None
+    forca: Optional[int] = Field(default=1)
+    agilidade: Optional[int] = Field(default=1)
+    intelecto: Optional[int] = Field(default=1)
+    presenca: Optional[int] = Field(default=1)
+    vigor: Optional[int] = Field(default=1)
+    inventario: Optional[str] = None
+    descricao: Optional[str] = None
+    defesa: Optional[int] = Field(default=1)
+    armas: Optional[str] = None

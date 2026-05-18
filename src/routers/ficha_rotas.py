@@ -76,3 +76,22 @@ async def atualizar_ficha(
         usuario=usuario, 
         sessao=sessao
     )
+
+@ficha_rota.patch(
+    path='/me/{id_ficha}', 
+    response_model=ficha_schema.FichaPublica, 
+    status_code=status.HTTP_200_OK
+)
+async def atualizar_parcial_ficha(
+    id_ficha: int,
+    dados: ficha_schema.AtualizarParcialFicha,
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> ficha_schema.FichaPublica:
+    
+    return await ficha_service.atualizar_parcial_ficha(
+        id_ficha=id_ficha,
+        dados=dados,
+        usuario=usuario, 
+        sessao=sessao
+    )
