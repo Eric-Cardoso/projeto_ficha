@@ -1,5 +1,5 @@
 from core.configuracoes import Base
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Boolean
 
 # Configura a tabela de usuarios
 class Usuario(Base):
@@ -12,3 +12,5 @@ class Usuario(Base):
     email = Column(String, nullable=False, unique=True)
     senha = Column(String, nullable=False)
     quantidade_fichas = Column(Integer, nullable=False, default=0)
+    ativo = Column(Boolean, nullable=False, default=True)
+    admin = Column(Boolean, nullable=False, default=False)
