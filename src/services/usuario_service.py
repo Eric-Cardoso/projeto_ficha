@@ -3,8 +3,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from schemas import usuario_schema
 from models.usuario_model import Usuario
+from models.ficha_model import Ficha
 from core.seguranca import bcrypt_context, validar_senha
-from repos import repo_usuario
+from repos import repo_usuario, repo_ficha
 
 async def verificar_fichas(usuario: Usuario) -> None:
     # Verifica se a quantidade de fichas veio como um valor Nulo
@@ -84,9 +85,18 @@ async def atualizar_usuario(
     return db_usuario
 
 async def deletar_usuario(usuario: Usuario, sessao: AsyncSession) -> Response:
+    # Obtém todas fichas que pertencem ao usuário deletado
+    db_fichas = await sessao.scalars(
+        select(Ficha)
+        .where(Ficha.id_usuario == usuario.id)
+    )
+
+    # Deleta as fichas
+    await repo_ficha.deletar_fichas(fichas=db_fichas.all(), sessao=sessao)
+    
     # Deleta o usuário
     await repo_usuario.deletar_usuario(usuario=usuario, sessao=sessao)
-
+    
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

@@ -24,3 +24,12 @@ async def deletar_ficha(ficha: Ficha, sessao: AsyncSession) -> None:
     
     # Salva no banco as alterações
     await sessao.commit()
+
+
+async def deletar_fichas(fichas: list[Ficha], sessao: AsyncSession) -> None:
+    # Deleta todas as fichas que pertenciam ao usuário deletado
+    for ficha in fichas:
+        await sessao.delete(ficha)
+
+    # Salva no banco as alterações
+    await sessao.commit()
