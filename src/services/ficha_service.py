@@ -1,18 +1,16 @@
 from models.usuario_model import Usuario
 from models.ficha_model import Ficha
-from fastapi import Depends, HTTPException, status, Response
-from dependencias import verificar_token, sessao
+from fastapi import HTTPException, status, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from schemas import ficha_schema
 from repos import repo_ficha
 from services import redis_service
-from core.configuracoes import cache
 
 async def criar_ficha(
     dados: ficha_schema.CriarFicha,
-    usuario: Usuario = Depends(verificar_token), 
-    sessao: AsyncSession = Depends(sessao)
+    usuario: Usuario,
+    sessao: AsyncSession
 ) -> Ficha:
     
     # Obtém os dados em forma de dict
