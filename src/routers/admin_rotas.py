@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status, Depends
-from schemas import admin_schema
+from schemas import admin_schema, usuario_schema
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependencias import sessao
 from services import admin_service
@@ -26,4 +26,21 @@ async def listar_usuarios(
         sessao=sessao, 
         offset=offset, 
         limit=limit
+    )
+
+@admin_rota.get(
+    path='/usuario/{id_usuario}',
+    response_model=usuario_schema.UsuarioPublico, 
+    status_code=status.HTTP_200_OK
+)
+async def listar_usuario(
+    id_usuario: int,
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> usuario_schema.UsuarioPublico:
+    
+    return await admin_service.listar_usuario(
+        id_usuario=id_usuario,
+        usuario=usuario, 
+        sessao=sessao
     )
