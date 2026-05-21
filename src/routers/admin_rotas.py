@@ -44,3 +44,22 @@ async def listar_usuario(
         usuario=usuario, 
         sessao=sessao
     )
+
+@admin_rota.patch(
+    path='/usuario/{id_usuario}',
+    response_model=admin_schema.UsuarioPublico, 
+    status_code=status.HTTP_200_OK
+)
+async def atualizar_usuario(
+    id_usuario: int,
+    dados: admin_schema.AtualizarUsuario,
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> admin_schema.UsuarioPublico:
+    
+    return await admin_service.atualizar_usuario(
+        id_usuario=id_usuario,
+        dados=dados,
+        usuario=usuario, 
+        sessao=sessao
+    )

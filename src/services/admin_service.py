@@ -3,6 +3,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from schemas import admin_schema
+from repos import repo_admin
 
 async def listar_usuarios(
     usuario: Usuario, 
@@ -42,12 +43,13 @@ async def listar_usuario(
             detail='Acesso negado'
         )
     
-    # Obtém os usuários salvos no banco
+    # Obtém o usuário de acordo com o id
     db_usuario = await sessao.scalar(
         select(Usuario)
         .where(Usuario.id == id_usuario)
     )
-
+    
+    # Verifica se o usuário foi encontrado
     if not db_usuario:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
@@ -55,4 +57,47 @@ async def listar_usuario(
         )
     
     return db_usuario
+
+async def atualizar_usuario(
+    id_usuario: int,
+    dados: admin_schema.AtualizarUsuario, 
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> Usuario:
+    
+    # Verifica se o usuário logado é admin
+    if not usuario.admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail='Acesso negado'
+        )
+    
+    # Busca o usuário pelo id
+    db_usuario = await sessao.scalar(
+        select(Usuario)
+        .where(Usuario.id == id_usuario)
+    )
+
+    # Verifica se o usuário foi encontrado
+    if not db_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Usuário não encontrado'
+        )
+    
+    # Obtém os dados enviados em forma de dict
+    dict_dados = dados.model_dump(exclude_unset=True, exclude_none=True)
+
+    # Atualiza os dados do usuário
+    for campo, valor in dict_dados.items():
+        setattr(db_usuario, campo, valor)
+
+    # Salva no banco
+    await repo_admin.atualizar_usuario(usuario=db_usuario, sessao=sessao)
+
+    return db_usuario
+
+    
+
+
     

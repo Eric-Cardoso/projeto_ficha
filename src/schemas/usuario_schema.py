@@ -10,7 +10,6 @@ class UsuarioPublico(BaseModel):
     id: int
     nome: Optional[str] = None
     email: str
-    senha: str
     quantidade_fichas: int
 
 class AtualizarUsuario(BaseModel):
