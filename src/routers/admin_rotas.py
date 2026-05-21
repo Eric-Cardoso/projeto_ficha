@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, Response
 from schemas import admin_schema, usuario_schema
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependencias import sessao
@@ -60,6 +60,22 @@ async def atualizar_usuario(
     return await admin_service.atualizar_usuario(
         id_usuario=id_usuario,
         dados=dados,
+        usuario=usuario, 
+        sessao=sessao
+    )
+
+@admin_rota.delete(
+    path='/usuario/{id_usuario}',
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def deletar_usuario(
+    id_usuario: int,
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> Response:
+    
+    return await admin_service.deletar_usuario(
+        id_usuario=id_usuario,
         usuario=usuario, 
         sessao=sessao
     )

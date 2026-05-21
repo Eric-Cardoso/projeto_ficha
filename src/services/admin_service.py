@@ -1,5 +1,5 @@
 from models.usuario_model import Usuario
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from schemas import admin_schema
@@ -97,7 +97,37 @@ async def atualizar_usuario(
 
     return db_usuario
 
+async def deletar_usuario(
+    id_usuario: int, 
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> Response:
     
+    # Verifica se o usuário logado é admin
+    if not usuario.admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail='Acesso negado'
+        )
+    
+    # Busca o usuário pelo id
+    db_usuario = await sessao.scalar(
+        select(Usuario)
+        .where(Usuario.id == id_usuario)
+    )
+
+    # Verifica se o usuário foi encontrado
+    if not db_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Usuário não encontrado'
+        )
+    
+    # Deleta o usuário do banco
+    await repo_admin.deletar_usuario(usuario=db_usuario, sessao=sessao)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 
 
     
