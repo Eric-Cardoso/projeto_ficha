@@ -166,4 +166,59 @@ async def listar_fichas(
         'fichas': db_fichas.all()
     }
 
+async def listar_ficha(
+    id_usuario: int,
+    id_ficha: int, 
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> admin_schema.ListarFicha:
+    
+    # Verifica se o usuário logado é admin
+    if not usuario.admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail='Acesso negado'
+        )
+    
+    # Busca o usuário pelo id
+    db_usuario = await sessao.scalar(
+        select(Usuario)
+        .where(Usuario.id == id_usuario)
+    )
+
+    # Verifica se o usuário foi encontrado
+    if not db_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Usuário não encontrado'
+        )
+    
+    # Busca a ficha pelo id
+    db_ficha = await sessao.scalar(
+        select(Ficha)
+        .where(Ficha.id == id_ficha)
+    )
+
+    # Verifica se a ficha foi encontrada
+    if not db_ficha:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Ficha não encontrada'
+        )
+    
+    # Verifica se a ficha buscada pertence ao usuário buscado
+    if db_ficha.id_usuario != db_usuario.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Ficha não encontrada'
+        )
+
+    return {
+        'usuario': db_usuario,
+        'ficha': db_ficha
+    }
+
+
+
+
     

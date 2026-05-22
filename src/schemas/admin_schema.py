@@ -21,3 +21,7 @@ class UsuarioPublico(BaseModel):
 class ListarFichas(BaseModel):
     usuario: UsuarioPublico
     fichas: list[FichaPublica]
+
+class ListarFicha(BaseModel):
+    usuario: UsuarioPublico
+    ficha: FichaPublica

@@ -96,3 +96,22 @@ async def listar_fichas(
         usuario=usuario, 
         sessao=sessao
     )
+
+@admin_rota.get(
+    path='/usuarios/{id_usuario}/fichas/{id_ficha}', 
+    response_model=admin_schema.ListarFicha, 
+    status_code=status.HTTP_200_OK
+)
+async def listar_ficha(
+    id_usuario: int,
+    id_ficha: int,
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> admin_schema.ListarFicha:
+    
+    return await admin_service.listar_ficha(
+        id_usuario=id_usuario,
+        id_ficha=id_ficha,
+        usuario=usuario, 
+        sessao=sessao
+    )
