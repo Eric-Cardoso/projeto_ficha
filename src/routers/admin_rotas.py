@@ -29,7 +29,7 @@ async def listar_usuarios(
     )
 
 @admin_rota.get(
-    path='/usuario/{id_usuario}',
+    path='/usuarios/{id_usuario}',
     response_model=usuario_schema.UsuarioPublico, 
     status_code=status.HTTP_200_OK
 )
@@ -46,7 +46,7 @@ async def listar_usuario(
     )
 
 @admin_rota.patch(
-    path='/usuario/{id_usuario}',
+    path='/usuarios/{id_usuario}',
     response_model=admin_schema.UsuarioPublico, 
     status_code=status.HTTP_200_OK
 )
@@ -65,7 +65,7 @@ async def atualizar_usuario(
     )
 
 @admin_rota.delete(
-    path='/usuario/{id_usuario}',
+    path='/usuarios/{id_usuario}',
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def deletar_usuario(
@@ -76,6 +76,23 @@ async def deletar_usuario(
     
     return await admin_service.deletar_usuario(
         id_usuario=id_usuario,
+        usuario=usuario, 
+        sessao=sessao
+    )
+
+@admin_rota.get(
+    path='/usuarios/{id_usuario}/fichas', 
+    response_model=admin_schema.ListarFichas, 
+    status_code=status.HTTP_200_OK
+)
+async def listar_fichas(
+    id_usuario: int, 
+    usuario: usuario_model.Usuario = Depends(verificar_token), 
+    sessao: AsyncSession = Depends(sessao)
+) -> admin_schema.ListarFichas:
+    
+    return await admin_service.listar_fichas(
+        id_usuario=id_usuario, 
         usuario=usuario, 
         sessao=sessao
     )

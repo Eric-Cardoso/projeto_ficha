@@ -1,4 +1,5 @@
 from models.usuario_model import Usuario
+from models.ficha_model import Ficha
 from fastapi import HTTPException, status, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -128,6 +129,41 @@ async def deletar_usuario(
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
+async def listar_fichas(
+    id_usuario: int, 
+    usuario: Usuario, 
+    sessao: AsyncSession
+) -> admin_schema.ListarFichas:
+    
+    # Verifica se o usuário logado é admin
+    if not usuario.admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail='Acesso negado'
+        )
+    
+    # Busca o usuário pelo id
+    db_usuario = await sessao.scalar(
+        select(Usuario)
+        .where(Usuario.id == id_usuario)
+    )
 
+    # Verifica se o usuário foi encontrado
+    if not db_usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail='Usuário não encontrado'
+        )
+    
+    # Obtém todas as fichas pertencentes ao usuário buscado
+    db_fichas = await sessao.scalars(
+        select(Ficha)
+        .where(Ficha.id_usuario == db_usuario.id)
+    )
+
+    return {
+        'usuario': db_usuario,
+        'fichas': db_fichas.all()
+    }
 
     

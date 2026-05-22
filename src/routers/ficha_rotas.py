@@ -27,7 +27,7 @@ async def criar_ficha(
     )
 
 @ficha_rota.get(
-    path='/me', 
+    path='/listar', 
     response_model=ficha_schema.ListarFichas, 
     status_code=status.HTTP_200_OK
 )
@@ -42,7 +42,7 @@ async def listar_fichas(
     )
 
 @ficha_rota.get(
-    path='/me/{id_ficha}', 
+    path='/{id_ficha}', 
     response_model=ficha_schema.FichaPublica, 
     status_code=status.HTTP_200_OK
 )
@@ -59,7 +59,7 @@ async def listar_ficha(
     )
 
 @ficha_rota.put(
-    path='/me/{id_ficha}', 
+    path='/{id_ficha}', 
     response_model=ficha_schema.FichaPublica, 
     status_code=status.HTTP_200_OK
 )
@@ -78,7 +78,7 @@ async def atualizar_ficha(
     )
 
 @ficha_rota.patch(
-    path='/me/{id_ficha}', 
+    path='/{id_ficha}', 
     response_model=ficha_schema.FichaPublica, 
     status_code=status.HTTP_200_OK
 )
@@ -97,7 +97,7 @@ async def atualizar_parcial_ficha(
     )
 
 @ficha_rota.delete(
-    path='/me/{id_ficha}', 
+    path='/{id_ficha}', 
     status_code=status.HTTP_204_NO_CONTENT
 )
 async def deletar_ficha(
