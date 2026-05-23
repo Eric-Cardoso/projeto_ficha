@@ -1,0 +1,19 @@
+site_name: Projeto Fichas API
+
+theme:
+  name: readthedocs
+
+nav:
+  - Projeto Fichas API: index.md
+  - Tecnologias utilizadas: tecnologias.md
+  - Arquitetura do projeto: arquitetura.md
+  - Autenticação: auth.md
+  - Usuários: usuarios.md
+  - Fichas: fichas.md
+  - Administração: administracao.md
+  - Cache com Redis: redis.md
+  - Principais rotas: rotas.md
+  - Instalação: instalacao.md
+  - Execução do projeto: execucao.md
+  - Documentação (MkDocs): documentacao.md
+  - Licença: licenca.md

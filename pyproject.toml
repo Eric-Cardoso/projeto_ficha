@@ -3,8 +3,8 @@ name = 'projeto-ficha'
 
 version = '0.1.0'
 
-description = ''
+description = 'API REST desenvolvida com FastAPI para gerenciamento de usuários e fichas, utilizando autenticação JWT, cache com Redis e ORM com SQLAlchemy.'
 
 authors = [
-{name = 'Eric', email = 'ericjc16oficial@gmail.com'}
+    {name = 'Eric', email = 'ericjc16oficial@gmail.com'}
 ]
